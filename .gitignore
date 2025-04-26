@@ -1,13 +1,25 @@
-# Ignore conda directories
+# ========================
+# Python-related ignores
+# ========================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Ignore compiled bytecode in subdirectories
+**/__pycache__/
+**/*.py[cod]
+
+# Ignore pip environment and conda directories
+.env/
+.venv/
+env/
+venv/
 .conda/
 
-# Ignore Python cache directories and files
-__pycache__/
-*/__pycache__/
-*.pyc
-*.pyo
+# ========================
+# Jupyter Notebook checkpoints
+# ========================
+.ipynb_checkpoints/
 
-# Ignore any other specific files or directories if needed
-# For example, ignoring IDE-related files:
-.vscode/
-.idea/
+# ========================
+# IDE / Editor specific
