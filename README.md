@@ -1,85 +1,51 @@
-# PyBank Command-Line Interface 🐍
+# account/bank_account.py
+from datetime import datetime
 
-A Python application simulating essential banking operations through a command-line interface, built using object-oriented principles.
+class Transaction:
+    def __init__(self, amount, transaction_type):
+        self.amount = amount
+        self.transaction_type = transaction_type  # "deposit" or "withdraw"
+        self.timestamp = datetime.now()
 
----
+    def __str__(self):
+        return f"{self.timestamp.strftime('%Y-%m-%d %H:%M:%S')} - {self.transaction_type.upper()}: ${self.amount}"
 
-## Project Overview
+class BankAccount:
+    def __init__(self, name, email, initial_balance=0):
+        self.name = name
+        self.email = email
+        self.balance = initial_balance
+        self.transactions_history = []
 
-PyBank CLI provides a text-based environment for interacting with a simulated banking system. It demonstrates core concepts like account management, transactions, and user handling in Python. This project is under active development, and contributions aimed at improving its stability and functionality are encouraged.
+    def deposit(self, amount):
+        if amount <= 0:
+            raise ValueError("Deposit amount must be greater than zero.")
+        self.balance += amount
+        self.transactions_history.append(Transaction(amount, "deposit"))
 
----
+    def withdraw(self, amount):
+        if amount <= 0:
+            raise ValueError("Withdrawal amount must be greater than zero.")
+        if self.balance < amount:
+            raise ValueError("Insufficient funds for withdrawal.")
+        self.balance -= amount
+        self.transactions_history.append(Transaction(amount, "withdraw"))
 
-## Capabilities
+    def get_balance(self):
+        return self.balance
 
-*   Account Creation: Supports different account types (e.g., Savings, Current).
-*   User Management: Add and manage user profiles linked to accounts.
-*   Transactions: Perform deposits and withdrawals.
-*   Information Retrieval: Check account balances.
+    def get_transaction_history(self):
+        return self.transactions_history
 
----
+    def __str__(self):
+        return f"{self.name} ({self.email}) - Balance: ${self.get_balance()}"
 
-## Technology Stack
+class SavingsAccount(BankAccount):
+    def __init__(self, name, email, initial_balance=0):
+        super().__init__(name, email, initial_balance)
+        self.account_type = "Savings"
 
-*   **Core Language:** Python 3
-*   **Dependencies:** Managed via `requirements.txt` (see file for details)
-
----
-
-## Setup and Execution
-
-### Prerequisites:
-
-*   Ensure Python 3 is installed on your system.
-*   `pip` (Python package installer) should be available.
-
-### Installation & Launch:
-
-1.  Clone this repository to your local machine.
-2.  Open a terminal or command prompt and navigate to the project's root directory.
-3.  Install the necessary packages:
-    ```bash
-    pip install -r requirements.txt
-    ```
-4.  Execute the main application script:
-    ```bash
-    python main.py
-    ```
-
----
-
-## Code Structure
-
-The application is organized into the following main components:
-
-```text
-PyBank-CLI/
-├── account/          # Contains BankAccount classes and User class
-│   ├── bank_account.py
-│   └── user.py
-├── bank_operator/    # Implements the core banking logic
-│   └── bank_operator.py
-├── main.py           # Entry point and CLI interaction handler
-└── requirements.txt  # Lists project dependencies
-```
-*(Known issues or areas needing refinement may exist; please consult the GitHub Issues tracker or explore the code.)*
-
----
-
-## How You Can Help
-
-Interested in improving PyBank CLI? Here's how:
-
-1.  **Identify Issues:** Run the application and look for bugs, unexpected behavior, or potential enhancements. Check the GitHub Issues list for reported items.
-2.  **Develop Solutions:** Implement fixes or improvements in the relevant Python modules (`account`, `bank_operator`, `main`).
-3.  **Submit Changes:** Propose your changes via a Pull Request, clearly explaining the problem addressed and the solution implemented.
-
----
-
-## Code Validation via CI
-
-To maintain code quality, an automated testing pipeline runs for every Pull Request submitted. These tests verify that the core banking operations function as expected with the proposed changes. Contributions must pass these checks to be considered for merging.
-
----
-
-We appreciate your interest in developing PyBank CLI.
+class CurrentAccount(BankAccount):
+    def __init__(self, name, email, initial_balance=0):
+        super().__init__(name, email, initial_balance)
+        self.account_type = "Current"
